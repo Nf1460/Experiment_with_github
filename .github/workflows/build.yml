@@ -4,6 +4,10 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    # This section tells GitHub to use the latest Node version to avoid warnings
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -18,6 +22,7 @@ jobs:
         run: npm install -g cordova
 
       - name: Create Android Project
+        # This creates the app structure, adds Android, and moves your HTML inside
         run: |
           cordova create build-dir com.nafis.app MyFirstApp
           cd build-dir
