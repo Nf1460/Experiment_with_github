@@ -1,0 +1,32 @@
+name: Build Android APK
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Cordova
+        run: npm install -g cordova
+
+      - name: Create Android Project
+        run: |
+          cordova create build-dir com.nafis.app MyFirstApp
+          cd build-dir
+          cordova platform add android
+          cp ../index.html www/index.html
+          cordova build android --debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-app-apk
+          path: build-dir/platforms/android/app/build/outputs/apk/debug/app-debug.apk
